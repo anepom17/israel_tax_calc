@@ -130,7 +130,11 @@ export const TaxBreakdown: React.FC<Props> = ({ state, result }) => {
             <summary className="flex cursor-pointer items-center justify-between text-slate-800">
               <span>Битуах Леуми и мас бриют</span>
               <span className="font-semibold">
-                {formatShekel(bituahLeumi.totalBituahLeumi + bituahLeumi.totalMasBriut)} ₪
+                {formatShekel(bituahLeumi.totalBituahLeumi + bituahLeumi.totalMasBriut)} ₪/год (
+                {formatShekel(
+                  (bituahLeumi.totalBituahLeumi + bituahLeumi.totalMasBriut) / 12,
+                )}{' '}
+                ₪/мес)
               </span>
             </summary>
             <div className="mt-2 space-y-1">
@@ -139,21 +143,25 @@ export const TaxBreakdown: React.FC<Props> = ({ state, result }) => {
               <p className="mt-1 font-medium text-slate-700">Битуах Леуми (ביטוח לאומי)</p>
               <p>
                 Сниженная ставка: {formatShekel(bituahLeumi.reducedBase)} ₪ →{' '}
-                {formatShekel(bituahLeumi.bituahLeumiReduced)} ₪
+                {formatShekel(bituahLeumi.bituahLeumiReduced)} ₪/мес (
+                {formatShekel(bituahLeumi.bituahLeumiReduced * 12)} ₪/год)
               </p>
               <p>
                 Полная ставка: {formatShekel(bituahLeumi.fullBase)} ₪ →{' '}
-                {formatShekel(bituahLeumi.bituahLeumiFull)} ₪
+                {formatShekel(bituahLeumi.bituahLeumiFull)} ₪/мес (
+                {formatShekel(bituahLeumi.bituahLeumiFull * 12)} ₪/год)
               </p>
               <p>52% от БЛ, вычитаемые из налогооблагаемого дохода: −{formatShekel(bituahLeumi.deductiblePortion)} ₪</p>
               <p className="mt-1 font-medium text-slate-700">Мас бриют (מס בריאות)</p>
               <p>
                 Сниженная ставка: {formatShekel(bituahLeumi.reducedBase)} ₪ →{' '}
-                {formatShekel(bituahLeumi.masBriutReduced)} ₪
+                {formatShekel(bituahLeumi.masBriutReduced)} ₪/мес (
+                {formatShekel(bituahLeumi.masBriutReduced * 12)} ₪/год)
               </p>
               <p>
                 Полная ставка: {formatShekel(bituahLeumi.fullBase)} ₪ →{' '}
-                {formatShekel(bituahLeumi.masBriutFull)} ₪
+                {formatShekel(bituahLeumi.masBriutFull)} ₪/мес (
+                {formatShekel(bituahLeumi.masBriutFull * 12)} ₪/год)
               </p>
             </div>
           </details>
