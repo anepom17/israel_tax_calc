@@ -60,6 +60,7 @@ export const InputForm: React.FC<Props> = ({
           <CurrencyInput
             label="Годовой оборот (הכנסות)"
             value={state.revenue || ''}
+            className="text-left"
             onChange={(e) =>
               dispatch({ type: 'SET_REVENUE', value: Number(e.target.value) || 0 })
             }
@@ -68,6 +69,7 @@ export const InputForm: React.FC<Props> = ({
           <CurrencyInput
             label="Годовые расходы (הוצאות מוכרות)"
             value={state.expenses || ''}
+            className="text-left"
             onChange={(e) =>
               dispatch({ type: 'SET_EXPENSES', value: Number(e.target.value) || 0 })
             }
