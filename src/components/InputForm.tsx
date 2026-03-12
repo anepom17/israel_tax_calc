@@ -88,7 +88,7 @@ export const InputForm: React.FC<Props> = ({
             dispatch({ type: 'SET_BUSINESS_TYPE', value })
           }
         />
-        
+
         {/* Дополнительные опции для компании */}
         {state.businessType === BusinessType.HEVRA && (
           <div className="space-y-3 border-t border-slate-200 pt-3">
@@ -123,6 +123,55 @@ export const InputForm: React.FC<Props> = ({
             </label>
           </div>
         )}
+
+        {/* НДС и экспорт — только для осек мурше и компании */}
+        {state.businessType === BusinessType.PATUR ? (
+          <div className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            Осек патур не платит НДС и не может зачитывать входящий НДС.
+          </div>
+        ) : (
+          <div className="mt-4 space-y-3 border-t border-slate-200 pt-3">
+            <div>
+              <label className="form-label">
+                Доля экспортного дохода (НДС 0%), %
+              </label>
+              <div className="mt-2 flex items-center gap-3">
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={state.exportPercent}
+                  onChange={(e) =>
+                    dispatch({
+                      type: 'SET_EXPORT_PERCENT',
+                      value: Number(e.target.value) || 0,
+                    })
+                  }
+                  className="flex-1"
+                />
+                <span className="min-w-12 text-right font-semibold text-slate-900">
+                  {state.exportPercent}%
+                </span>
+              </div>
+            </div>
+
+            <label className="checkbox-item flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={state.includeInputVat}
+                onChange={(e) =>
+                  dispatch({
+                    type: 'SET_STATE',
+                    value: { includeInputVat: e.target.checked },
+                  })
+                }
+              />
+              <span className="text-sm text-slate-700">
+                Учитывать входящий НДС (зачёт по расходам)
+              </span>
+            </label>
+          </div>
+        )}
       </FormSection>
 
       {/* ОСНОВНЫЕ ВЫЧЕТЫ */}
@@ -133,57 +182,6 @@ export const InputForm: React.FC<Props> = ({
 
       {/* РАСШИРЕННЫЕ ОПЦИИ */}
       <AdvancedOptionsToggle label="Расширенные параметры">
-        {/* НДС И ЭКСПОРТ */}
-        <FormSection title="НДС и экспорт" variant="advanced">
-          <div className="space-y-3">
-            <div>
-              <label className="form-label">
-                Доля экспортного дохода (НДС 0%), %
-              </label>
-              <div className="mt-2 flex gap-3 items-center">
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={state.businessType === BusinessType.PATUR ? 0 : state.exportPercent}
-                  disabled={state.businessType === BusinessType.PATUR}
-                  onChange={(e) =>
-                    dispatch({
-                      type: 'SET_EXPORT_PERCENT',
-                      value: Number(e.target.value) || 0,
-                    })
-                  }
-                  className="flex-1"
-                />
-                <span className="min-w-12 text-right font-semibold text-slate-900">
-                  {state.businessType === BusinessType.PATUR ? '0' : state.exportPercent}%
-                </span>
-              </div>
-            </div>
-
-            {state.businessType !== BusinessType.PATUR && (
-              <label className="checkbox-item flex cursor-pointer items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={state.includeInputVat}
-                  onChange={(e) =>
-                    dispatch({ type: 'SET_STATE', value: { includeInputVat: e.target.checked } })
-                  }
-                />
-                <span className="text-sm text-slate-700">
-                  Учитывать входящий НДС (зачёт по расходам)
-                </span>
-              </label>
-            )}
-
-            {state.businessType === BusinessType.PATUR && (
-              <div className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
-                Осек патур не платит НДС и не может зачитывать входящий НДС.
-              </div>
-            )}
-          </div>
-        </FormSection>
-
         {/* ЛЬГОТНЫЙ НАСЕЛЕННЫЙ ПУНКТ */}
         <FormSection 
           title="Льготный населённый пункт (יישוב מזכה)"
