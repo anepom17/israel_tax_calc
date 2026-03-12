@@ -10,7 +10,7 @@ type Props = {
 
 const categoryConfig: Record<TaxCategory, { label: string; class: string }> = {
   income: { label: 'Подоходный налог', class: 'tax-badge-income' },
-  bitouach: { label: 'Битуах Леуми', class: 'tax-badge-bitouach' },
+  bitouach: { label: 'Битуах Леуми + Мас бриют', class: 'tax-badge-bitouach' },
   vat: { label: 'НДС', class: 'tax-badge-vat' },
   corporate: { label: 'Корпоративный налог', class: 'tax-badge-corporate' },
 };

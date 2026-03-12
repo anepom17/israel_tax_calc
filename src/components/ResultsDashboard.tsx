@@ -49,6 +49,7 @@ export const ResultsDashboard: React.FC<Props> = ({ state, result }) => {
           <ResultsCard
             label="Общий налог"
             value={formatShekel(totalTaxYearly)}
+            subValue={`${formatShekel(totalTaxYearly / 12)}/мес`}
             variant="primary"
           />
           <ResultsCard
@@ -59,6 +60,7 @@ export const ResultsDashboard: React.FC<Props> = ({ state, result }) => {
           <ResultsCard
             label="Брутто доход"
             value={formatShekel(grossIncome)}
+            subValue={`${formatShekel(grossIncome / 12)}/мес`}
             variant="secondary"
           />
         </div>
@@ -104,19 +106,20 @@ export const ResultsDashboard: React.FC<Props> = ({ state, result }) => {
             {incomeTax && incomeTax.totalIncomeTax > 0 && (
               <TaxCategoryBadge
                 category="income"
-                amount={formatShekel(incomeTax.totalIncomeTax)}
+                amount={`${formatShekel(incomeTax.totalIncomeTax)} (${formatShekel(
+                  incomeTax.totalIncomeTax / 12,
+                )}/мес)`}
               />
             )}
             {bituahLeumi && (bituahLeumi.totalBituahLeumi + bituahLeumi.totalMasBriut > 0) && (
-              <>
-                <TaxCategoryBadge
-                  category="bitouach"
-                  amount={formatShekel(bituahLeumi.totalBituahLeumi)}
-                />
-                <div className="ml-3 text-xs text-slate-600">
-                  + Мас бриют: {formatShekel(bituahLeumi.totalMasBriut)}
-                </div>
-              </>
+              <TaxCategoryBadge
+                category="bitouach"
+                amount={`${formatShekel(
+                  bituahLeumi.totalBituahLeumi + bituahLeumi.totalMasBriut,
+                )} (${formatShekel(
+                  (bituahLeumi.totalBituahLeumi + bituahLeumi.totalMasBriut) / 12,
+                )}/мес)`}
+              />
             )}
             {vat && vat.netVat !== 0 && (
               <TaxCategoryBadge
