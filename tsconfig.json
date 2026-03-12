@@ -2,7 +2,7 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "src",
+    "rootDir": ".",
     // "outDir": "./dist",
 
     // Environment Settings
@@ -45,6 +45,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "noEmit": true,
-  }
+    "noEmit": true
+  },
+  "include": ["src", "vite.config.ts"]
 }

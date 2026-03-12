@@ -1,5 +1,6 @@
 import React from 'react';
 import type { NekudotOptions } from '../types';
+import { FormSection } from './FormSection';
 
 type Props = {
   value: NekudotOptions;
@@ -11,11 +12,12 @@ export const NekudotSelector: React.FC<Props> = ({ value, onChange }) => {
     onChange({ ...value, ...patch });
 
   return (
-    <section className="rounded-xl bg-white p-4 shadow-md">
-      <h2 className="text-base font-semibold text-slate-900">
-        Некудот зикуй (נקודות זיכוי)
-      </h2>
-      <div className="mt-3 space-y-3 text-sm">
+    <FormSection 
+      title="Некудот зикуй (נקודות זיכוי)" 
+      description="Льготы и вычеты в зависимости от личного статуса"
+      variant="deductions"
+    >
+      <div className="space-y-3 text-sm">
         <div>
           <span className="text-xs font-medium text-slate-700">Пол</span>
           <div className="mt-1 inline-flex rounded-lg bg-slate-100 p-1 text-xs">
@@ -127,13 +129,16 @@ export const NekudotSelector: React.FC<Props> = ({ value, onChange }) => {
                 type="date"
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs"
                 value={value.aliyahDate ?? ''}
-                onChange={(e) => update({ aliyahDate: e.target.value || undefined })}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  update(newValue ? { aliyahDate: newValue } : {});
+                }}
               />
             </div>
           )}
         </div>
       </div>
-    </section>
+    </FormSection>
   );
 };
 

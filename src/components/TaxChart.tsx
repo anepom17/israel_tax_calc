@@ -68,11 +68,13 @@ export const TaxChart: React.FC<Props> = ({ result }) => {
 
   return (
     <section className="rounded-xl bg-white p-4 shadow-md">
-      <h2 className="text-base font-semibold text-slate-900">
-        Визуализация налоговой нагрузки
-      </h2>
-      <div className="mt-3 grid gap-4 text-xs lg:grid-cols-2">
-        <div className="h-52">
+      <details className="group">
+        <summary className="flex cursor-pointer items-center justify-between font-semibold text-slate-900 hover:text-blue-600">
+          <span>📈 Визуализация налоговой нагрузки</span>
+          <span className="text-sm transition-transform group-open:rotate-180">▼</span>
+        </summary>
+        <div className="mt-4 grid gap-4 text-xs lg:grid-cols-2">
+          <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -88,7 +90,7 @@ export const TaxChart: React.FC<Props> = ({ result }) => {
                 }
               >
                 {taxParts.map((entry, index) => (
-                  <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={entry.name} fill={COLORS[index % COLORS.length] as string} />
                 ))}
               </Pie>
               <Tooltip />
@@ -107,7 +109,8 @@ export const TaxChart: React.FC<Props> = ({ result }) => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
   );
 };

@@ -3,10 +3,178 @@
 :root {
   --color-primary: #1e3a5f;
   --color-accent: #3b82f6;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  
+  /* Section background colors */
+  --color-section-basic: #eff6ff;
+  --color-section-deductions: #f0fdf4;
+  --color-section-advanced: #fffbeb;
+  --color-section-results: #f8fafc;
+  
+  /* Tax category colors */
+  --color-tax-income: #6366f1;
+  --color-tax-bitouach: #06b6d4;
+  --color-tax-vat: #f97316;
 }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900;
+  }
+}
+
+@layer components {
+  .form-section {
+    @apply rounded-xl bg-white p-4 shadow-md border-l-4;
+  }
+
+  .form-section-basic {
+    @apply border-blue-400;
+  }
+
+  .form-section-deductions {
+    @apply border-green-400;
+  }
+
+  .form-section-advanced {
+    @apply border-amber-400;
+  }
+
+  .form-section-results {
+    @apply border-slate-300;
+  }
+
+  .section-header {
+    @apply text-base font-semibold text-slate-900;
+  }
+
+  .section-subheader {
+    @apply text-xs font-medium text-slate-700 uppercase tracking-wide;
+  }
+
+  .form-label {
+    @apply text-xs font-medium text-slate-700;
+  }
+
+  .form-helper {
+    @apply text-xs text-slate-500;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-sm transition-colors;
+    @apply focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100;
+    @apply hover:border-slate-400;
+  }
+
+  .form-input:disabled {
+    @apply bg-slate-50 text-slate-400 cursor-not-allowed;
+  }
+
+  .form-input::placeholder {
+    @apply text-slate-400;
+  }
+
+  .results-card {
+    @apply rounded-lg bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 p-4;
+  }
+
+  .results-card-value {
+    @apply text-xl font-bold text-slate-900;
+  }
+
+  .results-card-label {
+    @apply text-xs font-medium text-slate-600 uppercase tracking-wide;
+  }
+
+  .tax-badge {
+    @apply inline-block px-2 py-1 rounded-md text-xs font-medium;
+  }
+
+  .tax-badge-income {
+    @apply bg-indigo-100 text-indigo-800;
+  }
+
+  .tax-badge-bitouach {
+    @apply bg-cyan-100 text-cyan-800;
+  }
+
+  .tax-badge-vat {
+    @apply bg-orange-100 text-orange-800;
+  }
+
+  .tax-badge-corporate {
+    @apply bg-purple-100 text-purple-800;
+  }
+
+  .button-toggle {
+    @apply inline-flex items-center justify-center rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700;
+    @apply transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+
+  .button-toggle.active {
+    @apply bg-slate-900 text-white border-slate-900;
+  }
+
+  .radio-card {
+    @apply relative flex items-start gap-3 rounded-lg border-2 border-slate-200 p-3 cursor-pointer transition-all;
+    @apply hover:border-blue-300 hover:bg-blue-50;
+  }
+
+  .radio-card.selected {
+    @apply border-blue-500 bg-blue-50;
+  }
+
+  .checkbox-item {
+    @apply flex items-center gap-2 rounded-md p-2 transition-colors hover:bg-slate-50;
+  }
+
+  .number-field {
+    @apply space-y-1;
+  }
+
+  .collapsible-section {
+    @apply border-l-4 border-slate-300 rounded-lg bg-slate-50 p-3 text-sm;
+  }
+
+  .collapsible-summary {
+    @apply flex cursor-pointer items-center justify-between font-medium text-slate-800;
+    @apply transition-colors hover:text-slate-900;
+  }
+
+  .progress-bar {
+    @apply h-2 w-full rounded-full bg-slate-100;
+  }
+
+  .progress-bar-fill {
+    @apply h-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+}

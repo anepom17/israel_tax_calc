@@ -25,10 +25,12 @@ export const TaxBreakdown: React.FC<Props> = ({ state, result }) => {
 
   return (
     <section className="rounded-xl bg-white p-4 shadow-md">
-      <h2 className="text-base font-semibold text-slate-900">
-        Детальная разбивка налогов
-      </h2>
-      <div className="mt-3 space-y-2 text-sm">
+      <details className="group">
+        <summary className="flex cursor-pointer items-center justify-between font-semibold text-slate-900 hover:text-blue-600">
+          <span>📊 Детальная разбивка налогов</span>
+          <span className="text-sm transition-transform group-open:rotate-180">▼</span>
+        </summary>
+        <div className="mt-4 space-y-2 text-sm">
         {isPaturThresholdExceeded && (
           <div className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
             Ваш оборот превышает порог ({formatShekel(VAT.exemptThreshold)} ₪). Необходимо зарегистрироваться как осек мурше!
@@ -202,7 +204,8 @@ export const TaxBreakdown: React.FC<Props> = ({ state, result }) => {
             </div>
           </details>
         )}
-      </div>
+        </div>
+      </details>
     </section>
   );
 };

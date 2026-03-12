@@ -8,6 +8,7 @@ import { getMinMandatoryPensionYearly } from '../calculators/pensionCalc';
 import { PENSION_SELF_EMPLOYED, KEREN_HISHTALMUT } from '../constants/pension';
 import { INCOME_TAX_BRACKETS } from '../constants/taxBrackets';
 import { formatShekel } from '../utils/format';
+import { FormSection } from './FormSection';
 
 type Value = {
   pension: PensionOptions;
@@ -59,7 +60,7 @@ export const PensionSection: React.FC<Props> = ({ value, onChange, grossIncomeYe
         (b) => gross >= b.min && gross <= b.max,
       ) ?? INCOME_TAX_BRACKETS[INCOME_TAX_BRACKETS.length - 1];
 
-    const rate = incomeBracket.rate;
+    const rate = incomeBracket?.rate ?? 0.47;
     const saving = deductible * rate;
 
     return { saving, rate };
@@ -91,11 +92,12 @@ export const PensionSection: React.FC<Props> = ({ value, onChange, grossIncomeYe
   const clampAmount = (v: number, max: number) => Math.max(0, Number.isFinite(max) ? Math.min(v, max) : v);
 
   return (
-    <section className="rounded-xl bg-white p-4 shadow-md">
-      <h2 className="text-base font-semibold text-slate-900">
-        Пенсия и фонды
-      </h2>
-      <div className="mt-3 space-y-3 text-sm">
+    <FormSection
+      title="Пенсия и фонды"
+      description="Пенсионные отчисления и страховки"
+      variant="advanced"
+    >
+      <div className="space-y-3 text-sm">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <div className="min-w-0 flex-1">
@@ -204,7 +206,7 @@ export const PensionSection: React.FC<Props> = ({ value, onChange, grossIncomeYe
           }
         />
       </div>
-    </section>
+    </FormSection>
   );
 };
 

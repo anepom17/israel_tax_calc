@@ -4,12 +4,17 @@ import { formatShekel } from '../utils/format';
 import { NekudotSelector } from './NekudotSelector';
 import { PensionSection } from './PensionSection';
 import { yishuvCities, type YishuvCity } from '../data/yishuvCities';
+import { FormSection } from './FormSection';
+import { CurrencyInput } from './CurrencyInput';
+import { FormInput } from './FormInput';
+import { BusinessTypeSelector } from './BusinessTypeSelector';
+import { AdvancedOptionsToggle } from './AdvancedOptionsToggle';
 
 type Props = {
   state: TaxInput;
   dispatch: React.Dispatch<any>;
   onOpenYishuvInfo: () => void;
-  /** Текущая сумма льготы по месту жительства, ₪ (из расчёта) */
+  /** Текущая сумма льготы по месте жительства, ₪ (из расчёта) */
   yishuvCredit: number;
 };
 
@@ -49,237 +54,182 @@ export const InputForm: React.FC<Props> = ({
 
   return (
     <section className="space-y-4">
-      <div className="rounded-xl bg-white p-4 shadow-md">
-        <h2 className="text-base font-semibold text-slate-900">
-          Основные параметры
-        </h2>
-        <div className="mt-3 space-y-3">
-          <div>
-            <label className="flex justify-between text-xs font-medium text-slate-700">
-              <span>Годовой оборот (הכנסות), ₪</span>
-            </label>
-            <input
-              type="number"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              value={state.revenue || ''}
-              onChange={(e) =>
-                dispatch({ type: 'SET_REVENUE', value: Number(e.target.value) || 0 })
-              }
-            />
-          </div>
-          <div>
-            <label className="flex justify-between text-xs font-medium text-slate-700">
-              <span>Годовые расходы (הוצאות מוכרות), ₪</span>
-            </label>
-            <input
-              type="number"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              value={state.expenses || ''}
-              onChange={(e) =>
-                dispatch({ type: 'SET_EXPENSES', value: Number(e.target.value) || 0 })
-              }
-            />
-          </div>
-          <p className="text-xs text-slate-600">
-            Налогооблагаемый доход до вычетов: {formatShekel(gross)} ₪
-          </p>
-          <p className="text-xs text-slate-500">
-            Для точного расчёта НДС учитывайте во «входящем» только расходы с חשבונית מס по облагаемым операциям (не арнона, не часть обучения/услуг и т.д.).
-          </p>
-          <p className="text-xs text-slate-500">
-            Ставки налогового года 2026
-          </p>
-        </div>
-      </div>
-
-      <div className="rounded-xl bg-white p-4 shadow-md">
-        <h2 className="text-base font-semibold text-slate-900">Тип бизнеса</h2>
-        <div className="mt-3 space-y-2 text-sm">
-          <div className="flex flex-col gap-2">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="businessType"
-                checked={state.businessType === BusinessType.PATUR}
-                onChange={() =>
-                  dispatch({ type: 'SET_BUSINESS_TYPE', value: BusinessType.PATUR })
-                }
-              />
-              <span>Осек патур (עוסק פטור)</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="businessType"
-                checked={state.businessType === BusinessType.MURSHE}
-                onChange={() =>
-                  dispatch({ type: 'SET_BUSINESS_TYPE', value: BusinessType.MURSHE })
-                }
-              />
-              <span>Осек мурше (עוסק מורשה)</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="businessType"
-                checked={state.businessType === BusinessType.HEVRA}
-                onChange={() =>
-                  dispatch({ type: 'SET_BUSINESS_TYPE', value: BusinessType.HEVRA })
-                }
-              />
-              <span>Компания (חברה בע&quot;מ)</span>
-            </label>
-          </div>
-
-          {state.businessType === BusinessType.HEVRA && (
-            <div className="mt-3 space-y-2">
-              <div>
-                <label className="flex justify-between text-xs font-medium text-slate-700">
-                  <span>Распределяемые дивиденды, %</span>
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={100}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  value={state.dividendPercent}
-                  onChange={(e) =>
-                    dispatch({
-                      type: 'SET_DIVIDEND_PERCENT',
-                      value: Number(e.target.value) || 0,
-                    })
-                  }
-                />
-              </div>
-              <label className="flex items-center gap-2 text-xs">
-                <input
-                  type="checkbox"
-                  checked={state.isMajorShareholder}
-                  onChange={(e) =>
-                    dispatch({
-                      type: 'SET_MAJOR_SHAREHOLDER',
-                      value: e.target.checked,
-                    })
-                  }
-                />
-                <span>Бааль манийот маhути (בעל מניות מהותי, ≥10%)</span>
-              </label>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="rounded-xl bg-white p-4 shadow-md">
-        <h2 className="text-base font-semibold text-slate-900">НДС и экспорт</h2>
-        <div className="mt-3 space-y-2 text-sm">
-          <label className="flex justify-between text-xs font-medium text-slate-700">
-            <span>Доля экспортного дохода, % (НДС 0%)</span>
-          </label>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={state.businessType === BusinessType.PATUR ? 0 : state.exportPercent}
-            disabled={state.businessType === BusinessType.PATUR}
+      {/* ОСНОВНЫЕ ПАРАМЕТРЫ */}
+      <FormSection title="Основные параметры" variant="basic">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <CurrencyInput
+            label="Годовой оборот (הכנסות)"
+            value={state.revenue || ''}
             onChange={(e) =>
-              dispatch({
-                type: 'SET_EXPORT_PERCENT',
-                value: Number(e.target.value) || 0,
-              })
+              dispatch({ type: 'SET_REVENUE', value: Number(e.target.value) || 0 })
             }
-            className="mt-1 w-full"
+            helper="Общий объем продаж / услуг"
           />
-          <p className="text-xs text-slate-600">
-            {state.businessType === BusinessType.PATUR
-              ? 'Осек патур не платит НДС и не может зачитывать входящий НДС.'
-              : `Экспорт: ${state.exportPercent}% от оборота облагается НДС 0% (шиур эфес).`}
-          </p>
-          {state.businessType !== BusinessType.PATUR && (
-            <label className="mt-2 flex cursor-pointer items-center gap-2 text-xs text-slate-700">
+          <CurrencyInput
+            label="Годовые расходы (הוצאות מוכרות)"
+            value={state.expenses || ''}
+            onChange={(e) =>
+              dispatch({ type: 'SET_EXPENSES', value: Number(e.target.value) || 0 })
+            }
+            helper="Признанные налогом расходы"
+          />
+        </div>
+        <div className="rounded-lg bg-blue-50 px-3 py-2 text-xs text-blue-900">
+          <p className="font-medium">Налогооблагаемый доход (до вычетов):</p>
+          <p className="mt-1 text-sm font-semibold text-blue-700">{formatShekel(gross)} ₪</p>
+        </div>
+      </FormSection>
+
+      {/* ТИП БИЗНЕСА */}
+      <FormSection title="Тип бизнеса" variant="basic">
+        <BusinessTypeSelector
+          value={state.businessType}
+          onChange={(value) =>
+            dispatch({ type: 'SET_BUSINESS_TYPE', value })
+          }
+        />
+        
+        {/* Дополнительные опции для компании */}
+        {state.businessType === BusinessType.HEVRA && (
+          <div className="space-y-3 border-t border-slate-200 pt-3">
+            <CurrencyInput
+              label="Распределяемые дивиденды (%)"
+              type="number"
+              min={0}
+              max={100}
+              value={state.dividendPercent}
+              onChange={(e) =>
+                dispatch({
+                  type: 'SET_DIVIDEND_PERCENT',
+                  value: Number(e.target.value) || 0,
+                })
+              }
+              helper="Процент прибыли на выплату дивидендов"
+            />
+            <label className="checkbox-item flex cursor-pointer items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                checked={state.includeInputVat}
+                checked={state.isMajorShareholder}
                 onChange={(e) =>
-                  dispatch({ type: 'SET_STATE', value: { includeInputVat: e.target.checked } })
+                  dispatch({
+                    type: 'SET_MAJOR_SHAREHOLDER',
+                    value: e.target.checked,
+                  })
                 }
               />
-              <span>Считать входящий НДС (зачёт по расходам с חשבונית מס)</span>
+              <span className="text-sm text-slate-700">
+                Бааль манийот маhути (בעל מניות מהותי, ≥10%)
+              </span>
             </label>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
+      </FormSection>
 
+      {/* ОСНОВНЫЕ ВЫЧЕТЫ */}
       <NekudotSelector
         value={state.nekudot}
         onChange={(nekudot) => dispatch({ type: 'SET_STATE', value: { nekudot } })}
       />
 
-      <div className="rounded-xl bg-white p-4 shadow-md">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-base font-semibold text-slate-900">
-            Льготный населённый пункт (יישוב מזכה)
-          </h2>
-          <button
-            type="button"
-            onClick={onOpenYishuvInfo}
-            className="inline-flex h-6 items-center justify-center rounded-full border border-slate-200 px-2 text-[11px] font-medium text-slate-600 hover:bg-slate-50"
-            aria-label="Открыть справку по льготным населённым пунктам"
-          >
-            i
-          </button>
-        </div>
-        <div className="mt-3 space-y-2 text-xs text-slate-700">
-          <p>
-            Здесь можно задать льготу по месту жительства: процент вычета от
-            дохода до максимальной годовой базы. Эта сумма{' '}
-            <strong>напрямую уменьшит подоходный налог</strong>, но не может
-            сделать его отрицательным.
-          </p>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <div className="sm:col-span-1">
-              <label className="text-[11px] font-medium text-slate-700">
-                Город (автодополнение)
+      {/* РАСШИРЕННЫЕ ОПЦИИ */}
+      <AdvancedOptionsToggle label="Расширенные параметры">
+        {/* НДС И ЭКСПОРТ */}
+        <FormSection title="НДС и экспорт" variant="advanced">
+          <div className="space-y-3">
+            <div>
+              <label className="form-label">
+                Доля экспортного дохода (НДС 0%), %
               </label>
-              <div className="relative mt-1">
+              <div className="mt-2 flex gap-3 items-center">
                 <input
-                  type="text"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs"
-                  placeholder="Начните вводить название города…"
-                  value={cityQuery}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setCityQuery(value);
-                    setShowCitySuggestions(true);
-                  }}
-                  onFocus={() => setShowCitySuggestions(true)}
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={state.businessType === BusinessType.PATUR ? 0 : state.exportPercent}
+                  disabled={state.businessType === BusinessType.PATUR}
+                  onChange={(e) =>
+                    dispatch({
+                      type: 'SET_EXPORT_PERCENT',
+                      value: Number(e.target.value) || 0,
+                    })
+                  }
+                  className="flex-1"
                 />
-                {showCitySuggestions && citySuggestions.length > 0 && (
-                  <div className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg">
-                    {citySuggestions.map((city) => (
-                      <button
-                        key={city.name}
-                        type="button"
-                        className="block w-full cursor-pointer px-3 py-1.5 text-left text-[11px] text-slate-800 hover:bg-slate-50"
-                        onClick={() => handleSelectCity(city)}
-                      >
-                        <span className="block">{city.name}</span>
-                        <span className="block text-[10px] text-slate-500">
-                          {city.percent}% · макс. {formatShekel(city.maxBase)} ₪
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <span className="min-w-12 text-right font-semibold text-slate-900">
+                  {state.businessType === BusinessType.PATUR ? '0' : state.exportPercent}%
+                </span>
               </div>
             </div>
-            <div>
-              <label className="text-[11px] font-medium text-slate-700">
-                Макс. сумма дохода в год, ₪
+
+            {state.businessType !== BusinessType.PATUR && (
+              <label className="checkbox-item flex cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={state.includeInputVat}
+                  onChange={(e) =>
+                    dispatch({ type: 'SET_STATE', value: { includeInputVat: e.target.checked } })
+                  }
+                />
+                <span className="text-sm text-slate-700">
+                  Учитывать входящий НДС (зачёт по расходам)
+                </span>
               </label>
-              <input
-                type="number"
-                min={0}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs"
+            )}
+
+            {state.businessType === BusinessType.PATUR && (
+              <div className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                Осек патур не платит НДС и не может зачитывать входящий НДС.
+              </div>
+            )}
+          </div>
+        </FormSection>
+
+        {/* ЛЬГОТНЫЙ НАСЕЛЕННЫЙ ПУНКТ */}
+        <FormSection 
+          title="Льготный населённый пункт (יישוב מזכה)"
+          variant="advanced"
+        >
+          <div className="space-y-3">
+            <p className="text-xs text-slate-600">
+              Процент прямого вычета из подоходного налога на основе места жительства.
+            </p>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="sm:col-span-1">
+                <label className="form-label">Город</label>
+                <div className="relative mt-1">
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Начните вводить…"
+                    value={cityQuery}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setCityQuery(value);
+                      setShowCitySuggestions(true);
+                    }}
+                    onFocus={() => setShowCitySuggestions(true)}
+                  />
+                  {showCitySuggestions && citySuggestions.length > 0 && (
+                    <div className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg">
+                      {citySuggestions.map((city) => (
+                        <button
+                          key={city.name}
+                          type="button"
+                          className="block w-full px-3 py-2 text-left text-xs text-slate-800 hover:bg-slate-50"
+                          onClick={() => handleSelectCity(city)}
+                        >
+                          <span className="font-medium">{city.name}</span>
+                          <span className="ml-2 text-slate-500">{city.percent}%</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <CurrencyInput
+                label="Макс. сумма дохода/год"
                 value={state.yishuvBenefit.maxIncomeYearly || ''}
                 onChange={(e) =>
                   dispatch({
@@ -292,52 +242,57 @@ export const InputForm: React.FC<Props> = ({
                     },
                   })
                 }
+                showValue={false}
               />
-            </div>
-            <div>
-              <label className="text-[11px] font-medium text-slate-700">
-                % вычета от дохода
-              </label>
-              <input
-                type="number"
-                min={0}
-                max={100}
-                step="0.1"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs"
-                value={state.yishuvBenefit.percent || ''}
-                onChange={(e) =>
-                  dispatch({
-                    type: 'SET_STATE',
-                    value: {
-                      yishuvBenefit: {
-                        ...state.yishuvBenefit,
-                        percent: Number(e.target.value) || 0,
-                      },
-                    },
-                  })
-                }
-              />
-            </div>
-          </div>
-          <p className="text-[11px] text-slate-500">
-            Текущая сумма льготы по месту жительства:{' '}
-            <strong>{formatShekel(Math.max(0, Math.round(yishuvCredit)))} ₪</strong>. Эта
-            сумма напрямую уменьшает подоходный налог, но не может сделать его
-            отрицательным.
-          </p>
-        </div>
-      </div>
 
-      <PensionSection
-        value={{
-          pension: state.pension,
-          keren: state.keren,
-          disabilityInsurance: state.disabilityInsurance,
-        }}
-        onChange={(value) => dispatch({ type: 'SET_STATE', value })}
-        grossIncomeYearly={gross}
-      />
+              <div>
+                <label className="form-label">% вычета</label>
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  step="0.1"
+                  className="form-input mt-1"
+                  value={state.yishuvBenefit.percent || ''}
+                  onChange={(e) =>
+                    dispatch({
+                      type: 'SET_STATE',
+                      value: {
+                        yishuvBenefit: {
+                          ...state.yishuvBenefit,
+                          percent: Number(e.target.value) || 0,
+                        },
+                      },
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="rounded-lg bg-green-50 px-3 py-2 text-xs text-green-900">
+              <p className="font-medium">Текущая льгота: {formatShekel(Math.max(0, Math.round(yishuvCredit)))} ₪</p>
+            </div>
+            <button
+              type="button"
+              onClick={onOpenYishuvInfo}
+              className="button-toggle justify-center text-xs w-full"
+            >
+              📖 Справка по льготам
+            </button>
+          </div>
+        </FormSection>
+
+        {/* ПЕНСИЯ И ФОНДЫ */}
+        <PensionSection
+          value={{
+            pension: state.pension,
+            keren: state.keren,
+            disabilityInsurance: state.disabilityInsurance,
+          }}
+          onChange={(value) => dispatch({ type: 'SET_STATE', value })}
+          grossIncomeYearly={gross}
+        />
+      </AdvancedOptionsToggle>
     </section>
   );
 };
-
