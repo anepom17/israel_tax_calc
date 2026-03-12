@@ -8,10 +8,25 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
   required?: boolean;
   showValue?: boolean;
+  /** Выравнивание текста в поле; по умолчанию справа (как для валюты) */
+  align?: 'left' | 'right';
 };
 
 export const CurrencyInput = React.forwardRef<HTMLInputElement, Props>(
-  ({ label, helper, error, required, showValue = true, value, className = '', ...props }, ref) => {
+  (
+    {
+      label,
+      helper,
+      error,
+      required,
+      showValue = true,
+      value,
+      className = '',
+      align = 'right',
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <div className="space-y-1">
         {label && (
@@ -24,7 +39,9 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, Props>(
             ref={ref}
             type="number"
             value={value || ''}
-            className={`form-input text-right ${error ? 'border-red-500 focus:ring-red-100' : ''} ${className}`}
+            className={`form-input ${align === 'right' ? 'text-right' : 'text-left'} ${
+              error ? 'border-red-500 focus:ring-red-100' : ''
+            } ${className}`}
             {...props}
           />
           <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
