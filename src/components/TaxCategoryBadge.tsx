@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type TaxCategory = 'income' | 'bitouach' | 'vat' | 'corporate';
+export type TaxCategory = 'income' | 'bitouach' | 'vat' | 'corporate' | 'pension';
 
 type Props = {
   category: TaxCategory;
@@ -13,6 +13,7 @@ const categoryConfig: Record<TaxCategory, { label: string; class: string }> = {
   bitouach: { label: 'Битуах Леуми + Мас бриют', class: 'tax-badge-bitouach' },
   vat: { label: 'НДС', class: 'tax-badge-vat' },
   corporate: { label: 'Корпоративный налог', class: 'tax-badge-corporate' },
+  pension: { label: 'Пенсия и керен', class: 'tax-badge-pension' },
 };
 
 export const TaxCategoryBadge: React.FC<Props> = ({ category, amount, className = '' }) => {

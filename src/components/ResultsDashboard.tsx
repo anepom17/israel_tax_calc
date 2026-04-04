@@ -22,17 +22,16 @@ export const ResultsDashboard: React.FC<Props> = ({ state, result }) => {
       ? incomeTax.totalIncomeTax +
         bituahLeumi.totalBituahLeumi +
         bituahLeumi.totalMasBriut +
-        vat.netVat
+        vat.netVat +
+        (pension?.pensionContribution ?? 0) +
+        (pension?.kerenContribution ?? 0)
       : corporate
         ? corporate.corporateTax + corporate.dividendTax + corporate.masYesefOnDividends
         : 0;
 
   const netIncomeWithoutExpensesYearly =
     state.revenue > 0 && incomeTax && bituahLeumi && vat && pension
-      ? state.revenue -
-        totalTaxYearly -
-        pension.pensionContribution -
-        pension.kerenContribution
+      ? state.revenue - totalTaxYearly
       : null;
 
   return (
@@ -125,6 +124,16 @@ export const ResultsDashboard: React.FC<Props> = ({ state, result }) => {
               <TaxCategoryBadge
                 category="vat"
                 amount={vat.netVat > 0 ? formatShekel(vat.netVat) : `−${formatShekel(-vat.netVat)}`}
+              />
+            )}
+            {pension && pension.pensionContribution + pension.kerenContribution > 0 && (
+              <TaxCategoryBadge
+                category="pension"
+                amount={`${formatShekel(
+                  pension.pensionContribution + pension.kerenContribution,
+                )} (${formatShekel(
+                  (pension.pensionContribution + pension.kerenContribution) / 12,
+                )}/мес)`}
               />
             )}
             {corporate && (corporate.corporateTax + corporate.dividendTax + corporate.masYesefOnDividends > 0) && (

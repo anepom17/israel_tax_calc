@@ -38,6 +38,14 @@ export const TaxChart: React.FC<Props> = ({ result }) => {
       value: result.vat?.netVat ?? 0,
     },
     {
+      name: 'Пенсия',
+      value: result.pension?.pensionContribution ?? 0,
+    },
+    {
+      name: 'Керен иштальмут',
+      value: result.pension?.kerenContribution ?? 0,
+    },
+    {
       name: 'Корпоративный+дивиденды',
       value:
         (result.corporate?.corporateTax ?? 0) +
@@ -46,19 +54,25 @@ export const TaxChart: React.FC<Props> = ({ result }) => {
     },
   ];
 
-  const COLORS = ['#1e3a5f', '#3b82f6', '#6366f1', '#0ea5e9', '#f97316'];
+  const COLORS = ['#1e3a5f', '#3b82f6', '#6366f1', '#0ea5e9', '#10b981', '#059669', '#f97316'];
 
   const gross = result.grossIncome;
   const afterBL =
     gross - (result.bituahLeumi?.totalBituahLeumi ?? 0) - (result.bituahLeumi?.totalMasBriut ?? 0);
   const afterIncomeTax = afterBL - (result.incomeTax?.totalIncomeTax ?? 0);
   const afterVat = afterIncomeTax - (result.vat?.netVat ?? 0);
+  const pensionKerenYearly =
+    (result.pension?.pensionContribution ?? 0) + (result.pension?.kerenContribution ?? 0);
+  const afterPensionKeren = afterVat - pensionKerenYearly;
 
   const waterfall = [
     { name: 'Брутто', value: gross },
     { name: 'После БЛ+МБ', value: afterBL },
     { name: 'После מס הכנסה', value: afterIncomeTax },
     { name: 'После НДС', value: afterVat },
+    ...(pensionKerenYearly > 0
+      ? [{ name: 'После пенсии и керен', value: afterPensionKeren }]
+      : []),
     { name: 'Нетто', value: result.netIncomeYearly },
   ];
 
