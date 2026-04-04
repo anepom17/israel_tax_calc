@@ -66,9 +66,9 @@ src/
 const INCOME_TAX_BRACKETS = [
   { min: 0,       max: 84_120,  rate: 0.10 },
   { min: 84_121,  max: 120_720, rate: 0.14 },
-  { min: 120_721, max: 193_800, rate: 0.20 },
-  { min: 193_801, max: 269_280, rate: 0.31 },
-  { min: 269_281, max: 560_280, rate: 0.35 },
+  { min: 120_721, max: 228_000, rate: 0.20 },
+  { min: 228_001, max: 301_200, rate: 0.31 },
+  { min: 301_201, max: 560_280, rate: 0.35 },
   { min: 560_281, max: Infinity, rate: 0.47 },
 ];
 ```
